@@ -1,0 +1,16 @@
+# Render configuration file
+# File này giúp cấu hình deploy tự động lên Render
+
+services:
+  - type: web
+    name: portfolio-backend
+    env: node
+    region: singapore # Chọn region gần nhất (singapore, oregon, frankfurt, etc.)
+    plan: free # hoặc starter, professional
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      # Thêm các biến môi trường khác qua Render Dashboard
+      # EMAIL_USER và EMAIL_PASS nên set qua Dashboard để bảo mật

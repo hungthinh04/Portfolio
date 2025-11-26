@@ -680,7 +680,7 @@ if (contactForm) {
         window.location.hostname === "localhost" ||
         window.location.hostname === "127.0.0.1"
           ? "http://localhost:5000/api/email/send"
-          : "https://portfolio-s4rc.onrender.com/api/email/send";
+          : "https://portfolio-cvk9.onrender.com//api/email/send";
 
       console.log("Sending email to:", API_URL);
       console.log("Form data:", formData);
