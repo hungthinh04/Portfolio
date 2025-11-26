@@ -682,9 +682,6 @@ if (contactForm) {
           ? "http://localhost:5000/api/email/send"
           : "https://portfolio-9xb1.vercel.app/api/email/send";
 
-      console.log("Sending email to:", API_URL);
-      console.log("Form data:", formData);
-
       // Tạo AbortController để có thể timeout request
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 giây timeout
@@ -717,13 +714,9 @@ if (contactForm) {
         }
       }
 
-      console.log("Response status:", response.status);
-      console.log("Response ok:", response.ok);
-
       let data;
       try {
         const text = await response.text();
-        console.log("Response text:", text);
         data = text ? JSON.parse(text) : {};
       } catch (parseError) {
         console.error("Parse error:", parseError);
