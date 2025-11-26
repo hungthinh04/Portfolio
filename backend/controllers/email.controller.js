@@ -1,8 +1,66 @@
 const nodemailer = require("nodemailer");
 const config = require("../config/email.config");
 
-// Khởi tạo transporter
-const transporter = nodemailer.createTransport(config.email);
+// Hàm tạo transporter với cấu hình cụ thể
+const createTransporter = (port, secure) => {
+  return nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    port: port,
+    secure: secure,
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
+    },
+    connectionTimeout: 60000,
+    greetingTimeout: 30000,
+    socketTimeout: 60000,
+    pool: true,
+    maxConnections: 1,
+    maxMessages: 3,
+    retry: {
+      attempts: 3,
+      delay: 2000,
+    },
+    tls: {
+      rejectUnauthorized: false,
+      ciphers: "SSLv3",
+    },
+    debug: process.env.NODE_ENV === "production",
+    logger: true,
+  });
+};
+
+// Khởi tạo transporter mặc định
+let transporter = createTransporter(config.email.port, config.email.secure);
+
+// Hàm gửi email với fallback
+const sendEmailWithFallback = async (mailOptions) => {
+  const configs = [
+    { port: 465, secure: true }, // Thử SSL trước
+    { port: 587, secure: false }, // Fallback về STARTTLS
+  ];
+
+  let lastError = null;
+
+  for (const cfg of configs) {
+    try {
+      console.log(
+        `Attempting to send email via port ${cfg.port} (secure: ${cfg.secure})...`
+      );
+      const tempTransporter = createTransporter(cfg.port, cfg.secure);
+      await tempTransporter.sendMail(mailOptions);
+      console.log(`Email sent successfully via port ${cfg.port}`);
+      return; // Thành công, thoát khỏi hàm
+    } catch (error) {
+      console.error(`Failed to send via port ${cfg.port}:`, error.message);
+      lastError = error;
+      // Tiếp tục thử config tiếp theo
+    }
+  }
+
+  // Nếu tất cả đều fail, throw error cuối cùng
+  throw lastError;
+};
 
 // Controller xử lý email
 const emailController = {
@@ -38,8 +96,8 @@ const emailController = {
                 `,
       };
 
-      // Gửi email đến bạn
-      await transporter.sendMail(mailOptions);
+      // Gửi email đến bạn với fallback
+      await sendEmailWithFallback(mailOptions);
 
       // Auto-reply email to the sender
       const autoReplyOptions = {
@@ -85,7 +143,7 @@ const emailController = {
                 `,
       };
 
-      await transporter.sendMail(autoReplyOptions);
+      await sendEmailWithFallback(autoReplyOptions);
 
       res.status(200).json({
         success: true,
@@ -93,10 +151,24 @@ const emailController = {
       });
     } catch (error) {
       console.error("Error sending email:", error);
+      console.error("Error code:", error.code);
+      console.error("Error command:", error.command);
+
+      // Xử lý các lỗi cụ thể
+      let errorMessage = "An error occurred while sending email";
+      if (error.code === "ETIMEDOUT" || error.code === "ECONNREFUSED") {
+        errorMessage =
+          "Connection timeout. Please check your email configuration or try again later.";
+      } else if (error.code === "EAUTH") {
+        errorMessage =
+          "Email authentication failed. Please check your email credentials.";
+      }
+
       res.status(500).json({
         success: false,
-        message: "An error occurred while sending email",
+        message: errorMessage,
         error: error.message,
+        code: error.code,
       });
     }
   },
