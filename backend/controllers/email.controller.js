@@ -11,6 +11,31 @@ const emailController = {
     try {
       const { name, email, subject, message } = req.body;
 
+      // Kiểm tra environment variables
+      if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+        console.error("Missing email credentials in environment variables");
+        return res.status(500).json({
+          success: false,
+          message:
+            "Email service is not configured. Please check server configuration.",
+          error: "Missing EMAIL_USER or EMAIL_PASS environment variable",
+        });
+      }
+
+      // Validate input
+      if (!name || !email || !subject || !message) {
+        return res.status(400).json({
+          success: false,
+          message: "All fields are required",
+        });
+      }
+
+      console.log("Attempting to send email...");
+      console.log("Email config:", {
+        user: process.env.EMAIL_USER ? "Set" : "Missing",
+        pass: process.env.EMAIL_PASS ? "Set" : "Missing",
+      });
+
       // Email sent to you (notification)
       const mailOptions = {
         from: email,
@@ -39,7 +64,9 @@ const emailController = {
       };
 
       // Gửi email đến bạn
+      console.log("Sending notification email to:", process.env.EMAIL_USER);
       await transporter.sendMail(mailOptions);
+      console.log("Notification email sent successfully");
 
       // Auto-reply email to the sender
       const autoReplyOptions = {

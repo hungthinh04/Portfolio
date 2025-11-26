@@ -685,13 +685,37 @@ if (contactForm) {
       console.log("Sending email to:", API_URL);
       console.log("Form data:", formData);
 
-      const response = await fetch(API_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+      // Tạo AbortController để có thể timeout request
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 giây timeout
+
+      let response;
+      try {
+        response = await fetch(API_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+          signal: controller.signal,
+        });
+        clearTimeout(timeoutId);
+      } catch (fetchError) {
+        clearTimeout(timeoutId);
+
+        // Xử lý các loại lỗi khác nhau
+        if (fetchError.name === "AbortError") {
+          throw new Error(
+            "Request timeout. Server took too long to respond. Please try again."
+          );
+        } else if (fetchError.message.includes("Failed to fetch")) {
+          throw new Error(
+            "Cannot connect to server. The server might be sleeping or unavailable. Please try again in a moment."
+          );
+        } else {
+          throw fetchError;
+        }
+      }
 
       console.log("Response status:", response.status);
       console.log("Response ok:", response.ok);
@@ -933,6 +957,11 @@ if (contactForm) {
       }
     } catch (error) {
       console.error("Error:", error);
+      console.error("Error details:", {
+        name: error.name,
+        message: error.message,
+        stack: error.stack,
+      });
 
       // Provide more helpful error messages
       let errorMessage =
@@ -941,11 +970,19 @@ if (contactForm) {
 
       if (
         error.message.includes("Failed to fetch") ||
-        error.message.includes("NetworkError")
+        error.message.includes("NetworkError") ||
+        error.message.includes("Cannot connect to server")
       ) {
         errorMessage =
-          "Cannot connect to server. Please check:\n1. Backend server is running\n2. CORS is configured correctly\n3. Network connection is stable";
-        errorTitle = "Network Error";
+          "Không thể kết nối đến server. Server có thể đang sleep (Render.com free tier). Vui lòng thử lại sau vài giây.";
+        errorTitle = "Lỗi Kết Nối";
+      } else if (
+        error.message.includes("timeout") ||
+        error.message.includes("Request timeout")
+      ) {
+        errorMessage =
+          "Request quá thời gian chờ. Server có thể đang xử lý chậm. Vui lòng thử lại.";
+        errorTitle = "Hết Thời Gian Chờ";
       } else if (error.message.includes("Invalid response")) {
         errorMessage =
           "Server returned invalid response. Please check backend configuration.";
