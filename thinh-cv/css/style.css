@@ -5010,3 +5010,183 @@ section.active::before {
     height: 55px;
   }
 }
+
+@media (max-width: 640px) {
+  /* Layout + spacing */
+  section {
+    padding: 70px 18px;
+  }
+
+  .navbar {
+    padding: 0.75rem 1rem;
+  }
+
+  .logo {
+    font-size: 1.2rem;
+  }
+
+  /* Hero */
+  .hero {
+    min-height: auto;
+    padding: 120px 1rem 80px;
+  }
+
+  .hero-layout {
+    gap: 1.5rem;
+  }
+
+  .hero-content h1 {
+    font-size: 2.6rem;
+    line-height: 1.15;
+  }
+
+  .typing-container {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-description {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+
+  .hero-buttons {
+    flex-direction: column;
+    width: 100%;
+    gap: 0.75rem;
+    margin: 1.5rem 0 1rem;
+  }
+
+  .cta-button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .profile-wrapper {
+    width: 170px;
+    height: 170px;
+  }
+
+  /* Tabs + lists */
+  .section-title h2 {
+    font-size: 2rem;
+  }
+
+  .skills-tabs {
+    gap: 12px;
+    overflow-x: auto;
+    padding-bottom: 6px;
+  }
+
+  .skills-tabs::-webkit-scrollbar {
+    height: 4px;
+  }
+
+  .tab-btn {
+    min-width: 140px;
+    justify-content: center;
+  }
+
+  .skills-list {
+    gap: 20px;
+  }
+
+  /* Experience */
+  .experience-timeline {
+    padding-left: 0;
+  }
+
+  .experience-timeline::before {
+    left: 8px;
+  }
+
+  .timeline-marker {
+    left: -6px;
+    width: 14px;
+    height: 14px;
+  }
+
+  .timeline-content {
+    padding: 18px;
+  }
+
+  .timeline-header h3 {
+    font-size: 1.25rem;
+  }
+
+  /* Projects */
+  .projects {
+    padding: 60px 15px;
+  }
+
+  .project-card {
+    padding: 18px;
+    gap: 18px;
+  }
+
+  .project-header h3 {
+    font-size: 1.4rem;
+  }
+
+  .project-tech-stack {
+    gap: 8px;
+  }
+
+  /* Contact */
+  .contact {
+    padding: 70px 15px;
+  }
+
+  .contact-info,
+  .contact-form {
+    padding: 18px;
+  }
+
+  /* Footer */
+  .footer {
+    padding: 50px 15px 20px;
+  }
+
+  .footer-content {
+    gap: 18px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .footer-section {
+    text-align: left;
+  }
+
+  .footer-section h3::after {
+    left: 0;
+    transform: none;
+  }
+
+  .footer-links a,
+  .footer-contact li,
+  .footer-social {
+    justify-content: flex-start;
+  }
+
+  /* Chatbot */
+  .chatbot-container {
+    bottom: 16px;
+    right: 16px;
+  }
+
+  .chatbot-window {
+    width: calc(100vw - 24px);
+    height: 70vh;
+  }
+}
+
+/* About Section - Desktop only */
+.about {
+  margin-top: -120px;
+}
+
+@media (max-width: 768px) {
+  .about {
+    margin-top: 0;
+  }
+}
