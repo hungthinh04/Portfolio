@@ -9,45 +9,58 @@ const chatbotData = {
   education: {
     school: "Cao Thang Technical College",
     major: "Software Engineering",
-    period: "Sep 2022 - Jul 2025",
+    period: "Sep 2022 - Jun 2025",
   },
   experience: [
     {
-      company: "TechVanguard",
-      position: "FullStack Developer",
+      company: "Swiss Institute of Management and Sciences",
+      position: "Software Engineer",
       period: "May 2025 - Dec 2025",
       description:
-        "Worked on University Management System, CMS, Hospital Management System, and various web applications using Laravel, Node.js, Next.js, and MongoDB.",
+        "Enhanced University Management System (UMS), maintained Node.js/MongoDB CMS, Enhanced Candidate Application Portal (CAP), contributed to Hospital Management System (HMS) with RBAC and payment integration, built Next.js frontend for LAMS project, and developed GGCamp Portal frontend. Optimized data rendering with DataTables and Chart.js, implementing automated Excel reporting to reduce manual work by ~40%. Implemented CI/CD pipelines and managed source code using GitLab and Gitea.",
     },
     {
       company: "3i Co., Ltd",
-      position: "Software Engineer Intern - Remote",
-      period: "May 2024 - Aug 2024",
+      position: "Frontend Developer - Remote",
+      period: "May 2024 - Oct 2024",
       description:
-        "Developed news portal for Vietnam Coast Guard using TypeScript, maintained company website with React.js, and deployed applications to AWS.",
+        "Developed official news portal for Vietnam Coast Guard using TypeScript with high security standards. Deployed and managed frontend applications on AWS Amplify with CI/CD pipelines. Collaborated with backend teams to integrate RESTful APIs into ReactJS applications.",
     },
   ],
   skills: {
-    languages: ["JavaScript (ES6+)", "TypeScript", "PHP"],
-    frontend: ["Next.js", "HTML5/CSS3", "Tailwind CSS", "Bootstrap"],
+    languages: ["JavaScript", "TypeScript", "PHP"],
+    frontend: ["React", "Next.js", "Tailwind CSS", "Bootstrap"],
     backend: ["Node.js (Express.js)", "Laravel"],
     database: ["MySQL", "MongoDB"],
-    tools: ["Git (GitLab, Gitea, GitHub)", "Jira", "Postman"],
+    tools: [
+      "Docker",
+      "AWS Amplify",
+      "Git (GitHub, GitLab, Gitea)",
+      "CI/CD Pipelines",
+    ],
+    soft: [
+      "Communication",
+      "Team Collaboration",
+      "Self-Learning",
+      "English (Intermediate)",
+    ],
   },
   projects: [
     {
-      name: "Weather App",
-      period: "Nov 2024 - Dec 2024",
-      tech: "HTML, CSS, JavaScript, WeatherAPI, OpenAI API",
+      name: "CKC Classroom",
+      period: "Apr 2025 - Jun 2025",
+      tech: "React Native, Node.js, Express, MongoDB, JWT",
       description:
-        "Weather forecast application with 7-day predictions, interactive map, location detection, and audio alerts.",
+        "Classroom management system with React Native mobile app and web-based Admin dashboard. Built core features for students and lecturers including class enrollment, course management, assignments, submissions, and notifications. Implemented authentication and authorization using JWT with role-based access control.",
+      github: "https://github.com/hungthinh04/CKC_classroomApp",
     },
     {
       name: "Real-time Chat Application",
       period: "Dec 2024 - Apr 2025",
-      tech: "MongoDB, Express.js, React.js, Node.js, Socket.io, Tailwind CSS",
+      tech: "MongoDB, Express.js, React.js, Node.js, Socket.IO, Tailwind CSS",
       description:
-        "Full-stack messaging platform with real-time communication, JWT authentication, and persistent chat history.",
+        "Full-stack MERN chat application with Socket.IO for real-time communication. Implemented JWT authentication and authorization with secure login. Features include real-time messaging, message history, online user presence, and chat room management.",
+      github: "https://github.com/hungthinh04/mern-chat-app",
     },
   ],
 };
@@ -71,7 +84,7 @@ function getChatbotResponse(userMessage) {
       /(what.*name|who.*you|tên.*gì|bạn.*tên|name.*gì|tên.*là|your name|his name)/i
     )
   ) {
-    return `His name is ${chatbotData.name}, a ${chatbotData.title} with a goal to become a professional Fullstack Developer.`;
+    return `His name is ${chatbotData.name}, a ${chatbotData.title} with solid foundation in JavaScript, React/Next.js, Node.js, and PHP (Laravel).`;
   }
 
   // Contact information - improved matching
@@ -102,15 +115,17 @@ function getChatbotResponse(userMessage) {
       /(skill|kỹ năng|technology|tech|technologies|what.*can|what.*know|proficient|expertise|languages|frameworks|tools|stack)/i
     )
   ) {
-    return `Skills:\n\nLanguages: ${chatbotData.skills.languages.join(
+    return `Skills:\n\n📝 Languages: ${chatbotData.skills.languages.join(
       ", "
-    )}\nFrontend: ${chatbotData.skills.frontend.join(
+    )}\n🎨 Frontend: ${chatbotData.skills.frontend.join(
       ", "
-    )}\nBackend: ${chatbotData.skills.backend.join(
+    )}\n⚙️ Backend: ${chatbotData.skills.backend.join(
       ", "
-    )}\nDatabase: ${chatbotData.skills.database.join(
+    )}\n🗄️ Database: ${chatbotData.skills.database.join(
       ", "
-    )}\nTools: ${chatbotData.skills.tools.join(", ")}`;
+    )}\n🛠️ Tools: ${chatbotData.skills.tools.join(
+      ", "
+    )}\n👥 Soft Skills: ${chatbotData.skills.soft.join(", ")}`;
   }
 
   // Education - improved matching
@@ -135,19 +150,21 @@ function getChatbotResponse(userMessage) {
     return response;
   }
 
-  // TechVanguard specific - improved matching
+  // Swiss Institute specific - improved matching
   if (
     message.match(
-      /(techvanguard|ums|hms|cms|ggcamp|lam|university.*management|hospital.*management|content.*management)/i
+      /(swiss|ums|hms|cms|ggcamp|lam|university.*management|hospital.*management|content.*management)/i
     )
   ) {
-    return "At TechVanguard, he worked on:\n• University Management System (UMS) - Finance, Partnerships, Academic Routines modules\n• Content Management System (CMS) - Node.js/MongoDB\n• Candidate Application Portal (CAP)\n• Hospital Management System (HMS) - RBAC, Payment Gateway, EMR\n• LAMS project - Next.js frontend architecture\n• GGCamp Portal - Summer camp registration system";
+    return "At Swiss Institute of Management and Sciences, he worked on:\n• University Management System (UMS) - Finance, Partnerships, Academic Routines modules\n• Content Management System (CMS) - Node.js/MongoDB maintenance and updates\n• Candidate Application Portal (CAP) - Data retrieval and scholarship eligibility\n• Hospital Management System (HMS) - RBAC, Payment Gateway, EMR\n• LAMS project - Next.js frontend architecture and reusable components\n• GGCamp Portal - Summer camp registration system frontend\n• Optimized data rendering with DataTables and Chart.js\n• Implemented CI/CD pipelines using GitLab and Gitea";
   }
 
-  // Weather App - improved matching
-  if (message.match(/(weather|thời tiết|weather.*app)/i)) {
-    const project = chatbotData.projects.find((p) => p.name === "Weather App");
-    return `Weather App (${project.period}):\n${project.description}\nTechnologies: ${project.tech}`;
+  // CKC Classroom - improved matching
+  if (message.match(/(ckc|classroom|classroom.*app|ckc.*classroom)/i)) {
+    const project = chatbotData.projects.find(
+      (p) => p.name === "CKC Classroom"
+    );
+    return `CKC Classroom (${project.period}):\n${project.description}\n\nTechnologies: ${project.tech}\n🔗 GitHub: ${project.github}`;
   }
 
   // Chat Application - improved matching
@@ -155,7 +172,7 @@ function getChatbotResponse(userMessage) {
     const project = chatbotData.projects.find(
       (p) => p.name === "Real-time Chat Application"
     );
-    return `Real-time Chat Application (${project.period}):\n${project.description}\nTechnologies: ${project.tech}`;
+    return `Real-time Chat Application (${project.period}):\n${project.description}\n\nTechnologies: ${project.tech}\n🔗 GitHub: ${project.github}`;
   }
 
   // About/Introduction - new pattern
@@ -164,7 +181,7 @@ function getChatbotResponse(userMessage) {
       /(about|tell.*about|introduce|giới thiệu|who.*is|what.*about)/i
     )
   ) {
-    return `About Le Tai Hung Thinh:\n\nHe is a ${chatbotData.title} aspiring to become a professional Fullstack Developer. He has experience in building and maintaining complex management systems using JavaScript (React/Next.js/Node.js) and PHP (Laravel).\n\nYou can ask me about his experience, skills, education, projects, or contact information.`;
+    return `About Le Tai Hung Thinh:\n\nHe is a ${chatbotData.title} with a solid foundation in JavaScript, React/Next.js, Node.js, and PHP (Laravel). Experienced in building and maintaining web-based management systems, with the goal of applying technical skills to real-world projects and delivering reliable software solutions.\n\nYou can ask me about his experience, skills, education, projects, or contact information.`;
   }
 
   // Location - new pattern
