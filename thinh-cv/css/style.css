@@ -219,6 +219,10 @@ textarea::placeholder {
 }
 
 @media (max-width: 768px) {
+  .hero {
+    padding-top: 100px; /* Add padding to prevent image from being too close to header */
+  }
+
   .profile-wrapper {
     width: 200px;
     height: 200px;
@@ -5029,6 +5033,7 @@ section.active::before {
   .hero {
     min-height: auto;
     padding: 120px 1rem 80px;
+    padding-top: 140px; /* Extra padding to prevent image from being too close to header */
   }
 
   .hero-layout {
@@ -5188,5 +5193,178 @@ section.active::before {
 @media (max-width: 768px) {
   .about {
     margin-top: 0;
+  }
+}
+
+/* Easter Egg Games Tooltip */
+.easter-egg-tooltip-container {
+  position: fixed;
+  bottom: 100px;
+  left: 20px;
+  z-index: 999;
+}
+
+.easter-egg-trigger {
+  width: 50px;
+  height: 50px;
+  background: rgba(100, 255, 218, 0.1);
+  border: 2px solid var(--primary-color);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  backdrop-filter: blur(10px);
+}
+
+.easter-egg-trigger:hover {
+  background: rgba(100, 255, 218, 0.2);
+  transform: scale(1.1);
+  box-shadow: 0 0 20px rgba(100, 255, 218, 0.5);
+}
+
+.easter-egg-trigger i {
+  font-size: 24px;
+  color: var(--primary-color);
+}
+
+.easter-egg-tooltip {
+  position: absolute;
+  bottom: 60px;
+  left: 0;
+  width: 280px;
+  max-height: calc(100vh - 200px); /* Prevent tooltip from touching header */
+  overflow-y: auto;
+  background: rgba(10, 25, 47, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--primary-color);
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+.easter-egg-tooltip.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.easter-egg-tooltip-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(100, 255, 218, 0.2);
+}
+
+.easter-egg-tooltip-header h4 {
+  color: var(--primary-color);
+  font-size: 1.1rem;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.easter-egg-tooltip-close {
+  background: transparent;
+  border: none;
+  color: var(--text-color);
+  font-size: 18px;
+  cursor: pointer;
+  padding: 5px;
+  opacity: 0.7;
+  transition: all 0.3s ease;
+}
+
+.easter-egg-tooltip-close:hover {
+  opacity: 1;
+  color: var(--primary-color);
+  transform: rotate(90deg);
+}
+
+.easter-egg-games-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.easter-egg-game-item {
+  padding: 12px;
+  margin-bottom: 10px;
+  background: rgba(100, 255, 218, 0.05);
+  border-radius: 8px;
+  border-left: 3px solid var(--primary-color);
+  transition: all 0.3s ease;
+}
+
+.easter-egg-game-item:hover {
+  background: rgba(100, 255, 218, 0.1);
+  transform: translateX(5px);
+}
+
+.easter-egg-game-item h5 {
+  color: var(--primary-color);
+  font-size: 0.95rem;
+  margin: 0 0 5px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.easter-egg-game-item h5 i {
+  font-size: 1rem;
+}
+
+.easter-egg-game-item p {
+  color: var(--text-color);
+  font-size: 0.85rem;
+  margin: 0;
+  opacity: 0.8;
+  line-height: 1.5;
+}
+
+.easter-egg-game-item .game-hint {
+  color: var(--primary-color);
+  font-weight: 600;
+  font-size: 0.8rem;
+  margin-top: 5px;
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .easter-egg-tooltip-container {
+    bottom: 90px;
+    left: 15px;
+  }
+
+  .easter-egg-tooltip {
+    max-height: calc(
+      100vh - 180px
+    ); /* Prevent tooltip from touching header on mobile */
+  }
+
+  .easter-egg-trigger {
+    width: 45px;
+    height: 45px;
+  }
+
+  .easter-egg-trigger i {
+    font-size: 20px;
+  }
+
+  .easter-egg-tooltip {
+    width: calc(100vw - 60px);
+    max-width: 280px;
+    bottom: 55px;
   }
 }

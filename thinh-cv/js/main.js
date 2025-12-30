@@ -341,12 +341,50 @@ document.addEventListener("DOMContentLoaded", () => {
           clearInterval(currentMode);
           currentMode = null;
         }
-        location.reload();
+
+        // Remove matrix canvas if exists
+        const matrixCanvas = document.getElementById("matrix-canvas");
+        if (matrixCanvas) {
+          matrixCanvas.remove();
+        }
+
+        // Reset all styles
+        document.body.style.backgroundColor = "";
+        document.body.style.transition = "";
+
+        // Reset all element styles
+        const allElements = document.querySelectorAll("*");
+        allElements.forEach((el) => {
+          if (el.tagName !== "SCRIPT" && el.tagName !== "STYLE") {
+            el.style.color = "";
+            el.style.textShadow = "";
+            el.style.transform = "";
+            el.style.transition = "";
+            el.style.background = "";
+            el.style.border = "";
+          }
+        });
+
+        // Reload page to ensure complete reset
+        setTimeout(() => {
+          location.reload();
+        }, 500);
       },
     };
 
     let secretInput = "";
+    let secretInputTimeout = null;
+
     document.addEventListener("keydown", (e) => {
+      // Ignore if user is typing in input fields
+      if (
+        e.target.tagName === "INPUT" ||
+        e.target.tagName === "TEXTAREA" ||
+        e.target.isContentEditable
+      ) {
+        return;
+      }
+
       // Konami Code Check
       if (e.key === konamiCode[konamiIndex]) {
         konamiIndex++;
@@ -358,19 +396,38 @@ document.addEventListener("DOMContentLoaded", () => {
         konamiIndex = 0;
       }
 
-      // Secret Words Check
-      secretInput += e.key.toLowerCase();
-      Object.keys(secretCodes).forEach((code) => {
-        if (secretInput.includes(code)) {
-          secretCodes[code]();
-          secretInput = "";
-        }
-      });
+      // Secret Words Check - only process letter keys
+      const key = e.key.toLowerCase();
+      if (key.length === 1 && /[a-z]/.test(key)) {
+        secretInput += key;
 
-      // Reset secret input after 2 seconds of no typing
-      setTimeout(() => {
-        secretInput = "";
-      }, 2000);
+        // Clear previous timeout
+        if (secretInputTimeout) {
+          clearTimeout(secretInputTimeout);
+        }
+
+        // Check for secret codes
+        Object.keys(secretCodes).forEach((code) => {
+          if (secretInput.endsWith(code)) {
+            secretCodes[code]();
+            secretInput = "";
+            if (secretInputTimeout) {
+              clearTimeout(secretInputTimeout);
+            }
+            return;
+          }
+        });
+
+        // Keep only last 10 characters to prevent memory issues
+        if (secretInput.length > 10) {
+          secretInput = secretInput.slice(-10);
+        }
+
+        // Reset secret input after 3 seconds of no typing
+        secretInputTimeout = setTimeout(() => {
+          secretInput = "";
+        }, 3000);
+      }
     });
 
     // Click Pattern Easter Egg
@@ -394,6 +451,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Activate Easter Eggs
   addEasterEggs();
+
+  // Easter Egg Tooltip
+  initEasterEggTooltip();
 
   // Particles.js
   const particlesContainer = document.getElementById("particles-js");
@@ -559,6 +619,43 @@ document.addEventListener("DOMContentLoaded", () => {
   // Add smooth entrance animations
   addEntranceAnimations();
 });
+
+// Initialize Easter Egg Tooltip
+const initEasterEggTooltip = () => {
+  const trigger = document.getElementById("easterEggTrigger");
+  const tooltip = document.getElementById("easterEggTooltip");
+  const closeBtn = document.getElementById("easterEggTooltipClose");
+
+  if (!trigger || !tooltip || !closeBtn) return;
+
+  // Toggle tooltip on trigger click
+  trigger.addEventListener("click", (e) => {
+    e.stopPropagation();
+    tooltip.classList.toggle("show");
+  });
+
+  // Close tooltip on close button click
+  closeBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    tooltip.classList.remove("show");
+  });
+
+  // Close tooltip when clicking outside
+  document.addEventListener("click", (e) => {
+    if (
+      !trigger.contains(e.target) &&
+      !tooltip.contains(e.target) &&
+      tooltip.classList.contains("show")
+    ) {
+      tooltip.classList.remove("show");
+    }
+  });
+
+  // Prevent tooltip from closing when clicking inside it
+  tooltip.addEventListener("click", (e) => {
+    e.stopPropagation();
+  });
+};
 
 // Smooth scroll for anchor links
 document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
