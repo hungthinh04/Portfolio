@@ -4079,6 +4079,30 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Reduce-motion safeguard to avoid jank on low-end devices */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+
+  .background-animation,
+  #particles-js,
+  .floating,
+  .pulse-glow,
+  .scroll-progress-bar {
+    animation: none !important;
+  }
+
+  .background-animation,
+  #particles-js {
+    display: none !important;
+  }
+}
+
 /* Enhanced Section Transitions */
 section {
   position: relative;

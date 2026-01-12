@@ -1,3 +1,9 @@
+// Detect reduced motion / low-end device to tone down heavy effects
+const prefersReducedMotion = window.matchMedia(
+  "(prefers-reduced-motion: reduce)"
+).matches;
+const performanceMode = prefersReducedMotion || window.innerWidth < 768;
+
 // Handle mobile hamburger menu
 document.addEventListener("DOMContentLoaded", () => {
   // Activate home section when page loads
@@ -449,22 +455,24 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   };
 
-  // Activate Easter Eggs
-  addEasterEggs();
+  // Activate Easter Eggs (skip on low-end/reduced motion)
+  if (!performanceMode) {
+    addEasterEggs();
+  }
 
   // Easter Egg Tooltip
   initEasterEggTooltip();
 
-  // Particles.js
+  // Particles.js (lighter settings or disabled in performance mode)
   const particlesContainer = document.getElementById("particles-js");
-  if (particlesContainer && window.particlesJS) {
+  if (particlesContainer && window.particlesJS && !performanceMode) {
     particlesJS("particles-js", {
       particles: {
         number: {
-          value: 100,
+          value: 45,
           density: {
             enable: true,
-            value_area: 800,
+            value_area: 900,
           },
         },
         color: {
@@ -474,7 +482,7 @@ document.addEventListener("DOMContentLoaded", () => {
           type: "circle",
         },
         opacity: {
-          value: 0.5,
+          value: 0.35,
           random: true,
         },
         size: {
@@ -483,14 +491,14 @@ document.addEventListener("DOMContentLoaded", () => {
         },
         line_linked: {
           enable: true,
-          distance: 150,
+          distance: 160,
           color: "#64ffda",
-          opacity: 0.2,
+          opacity: 0.18,
           width: 1,
         },
         move: {
           enable: true,
-          speed: 2,
+          speed: 1.1,
           direction: "none",
           random: true,
           out_mode: "out",
@@ -500,12 +508,10 @@ document.addEventListener("DOMContentLoaded", () => {
         detect_on: "canvas",
         events: {
           onhover: {
-            enable: true,
-            mode: "grab",
+            enable: false,
           },
           onclick: {
-            enable: true,
-            mode: "push",
+            enable: false,
           },
           resize: true,
         },
@@ -516,7 +522,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // 3D Tilt Effect
   const heroContent = document.querySelector(".hero-content");
-  if (heroContent) {
+  if (heroContent && !performanceMode) {
     heroContent.addEventListener("mousemove", (e) => {
       const rect = heroContent.getBoundingClientRect();
       const x = e.clientX - rect.left;
@@ -605,13 +611,19 @@ document.addEventListener("DOMContentLoaded", () => {
   updateScrollProgress();
 
   // Add magnetic hover effect to buttons
-  addMagneticEffect();
+  if (!performanceMode) {
+    addMagneticEffect();
+  }
 
   // Add ripple effect to buttons
-  addRippleEffect();
+  if (!performanceMode) {
+    addRippleEffect();
+  }
 
   // Background parallax on hover - removed cursor follow
-  addBackgroundParallax();
+  if (!performanceMode) {
+    addBackgroundParallax();
+  }
 
   // Add scroll reveal animations
   addScrollReveal();
@@ -1126,6 +1138,7 @@ window.addEventListener("scroll", () => {
 
         // Add floating animation to elements in view
         if (
+          !performanceMode &&
           windowMiddle > sectionTop &&
           windowMiddle < sectionTop + sectionHeight
         ) {
@@ -1135,7 +1148,7 @@ window.addEventListener("scroll", () => {
           floatingElements.forEach((el, i) => {
             setTimeout(() => {
               el.classList.add("floating");
-            }, i * 100);
+            }, i * 120);
           });
         }
       });
